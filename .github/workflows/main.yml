@@ -1,0 +1,81 @@
+name: Build Android AAB
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar projeto
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Configurar Android
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar Android SDK 36
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Preparar arquivos do aplicativo
+        run: |
+          mkdir -p www
+          cp index.html www/
+          cp sw.js www/
+          cp manifest.json www/
+          cp enviar-push-exemplo.js www/
+
+          if [ -d icons ]; then
+            cp -R icons www/
+          fi
+
+      - name: Instalar dependências
+        run: |
+          npm install --no-audit --no-fund
+
+      - name: Criar projeto Android
+        run: |
+          npx cap add android
+
+      - name: Sincronizar Capacitor
+        run: |
+          npx cap sync android
+
+      - name: Garantir Android API 36
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path("android/variables.gradle")
+
+          if p.exists():
+              s = p.read_text()
+              s = s.replace("compileSdkVersion = 35", "compileSdkVersion = 36")
+              s = s.replace("targetSdkVersion = 35", "targetSdkVersion = 36")
+              p.write_text(s)
+          PY
+
+      - name: Gerar AAB
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon
+
+      - name: Guardar AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: mulher-calendario-menstrual-aab
+          path: android/app/build/outputs/bundle/release/*.aab
