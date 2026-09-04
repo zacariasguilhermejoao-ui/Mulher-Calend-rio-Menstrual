@@ -20,29 +20,28 @@ jobs:
           node-version: 22
           package-manager-cache: false
 
-      - name: Configurar Java
+      - name: Configurar Java 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
 
       - name: Instalar dependências
         run: npm install
 
-      - name: Instalar ferramenta de ícones
+      - name: Instalar gerador de ícones
         run: npm install --no-save @capacitor/assets
 
       - name: Preparar Android
         run: bash prepare-android.sh
 
-      - name: Gerar ícones Android
+      - name: Preparar ícone do app
         run: |
-          if [ -f "app-icon.png" ]; then
-            npx capacitor-assets generate --android
-          else
-            echo "ERRO: app-icon.png não encontrado."
-            exit 1
-          fi
+          mkdir -p assets
+          cp app-icon.png assets/icon.png
+
+      - name: Gerar ícones Android
+        run: npx @capacitor/assets generate --android
 
       - name: Sincronizar Capacitor
         run: npx cap sync android
@@ -54,37 +53,28 @@ jobs:
 
           p = Path("android/variables.gradle")
 
-          if p.exists():
-              s = p.read_text()
-              s = s.replace("compileSdkVersion = 35", "compileSdkVersion = 36")
-              s = s.replace("targetSdkVersion = 35", "targetSdkVersion = 36")
-              p.write_text(s)
+          if not p.exists():
+              raise SystemExit("android/variables.gradle não encontrado.")
 
-              print("API 36 configurada.")
-          else:
-              raise SystemExit("variables.gradle não encontrado.")
+          s = p.read_text()
+          s = s.replace("compileSdkVersion = 35", "compileSdkVersion = 36")
+          s = s.replace("targetSdkVersion = 35", "targetSdkVersion = 36")
+          p.write_text(s)
+
+          print("API 36 configurada.")
           PY
 
       - name: Dar permissão ao Gradle
         run: chmod +x android/gradlew
 
-      # =========================
-      # APK INSTALÁVEL
-      # =========================
       - name: Criar APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
 
-      # =========================
-      # AAB PARA GOOGLE PLAY
-      # =========================
       - name: Criar AAB
         working-directory: android
         run: ./gradlew bundleRelease --no-daemon
 
-      # =========================
-      # GUARDAR APK
-      # =========================
       - name: Guardar APK
         uses: actions/upload-artifact@v4
         with:
@@ -92,9 +82,6 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-      # =========================
-      # GUARDAR AAB
-      # =========================
       - name: Guardar AAB
         uses: actions/upload-artifact@v4
         with:
