@@ -1,0 +1,9 @@
+{
+  "appId": "com.cicloapp.app",
+  "appName": "Mulher Calendário Menstrual",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  }
+}
