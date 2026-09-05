@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mulher Calendário Menstrual</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#fff7fa">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Calendário">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#ed2d69;
+  --pink2:#f45b8a;
+  --pink-light:#fde7ef;
+  --pink-border:#f6cada;
+  --text:#292632;
+  --muted:#8e818d;
+  --bg:#fff7fa;
+  --white:#fff;
+  --mint:#bfe8e5;
+  --mint-dark:#16aaa1;
+  --green:#39c978;
+  --yellow:#f6b83f;
+  --shadow:0 12px 30px rgba(216,74,123,.08);
+  --ink:#292632;
+  --ink-soft:#8e818d;
+  --line:#f6cada;
+  --primary:#ed2d69;
+  --fertile:#16aaa1;
+  --fertile-soft:#e1f7e9;
+  --ovulation:#f6b83f;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh;display:flex;justify-content:center}
+button{font:inherit;border:0;cursor:pointer;color:inherit}
+#app{width:100%;max-width:520px;margin:auto;padding-bottom:105px;min-height:100vh;position:relative}
+
+.top{
+  padding:15px 18px 8px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.top-btn{
+  width:46px;height:46px;border-radius:17px;background:#fff4f8;
+  border:1px solid #f8d4e2;color:var(--pink);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.logo{display:flex;align-items:center;gap:8px;flex-direction:column;line-height:1;text-align:center}
+.logo-main{display:flex;align-items:center;gap:8px;color:var(--pink);font-weight:800;font-size:29px;letter-spacing:-1.2px}
+.logo-sub{font-size:11px;color:#746a75;margin-top:2px}
+.icon{width:26px;height:26px;display:block;color:inherit}
+.icon-sm{width:22px;height:22px;color:inherit}
+.icon-lg{width:42px;height:42px;color:inherit}
+
+.view{display:none;padding:0}
+.view.active{display:block}
+
+.hero{
+  margin:15px 18px 0;background:#fff;border-radius:28px;padding:22px 16px;
+  box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;
+}
+.ring{
+  width:140px;height:140px;border-radius:50%;flex:0 0 140px;
+  background:conic-gradient(var(--pink2) 0 0deg,#f7c5d7 0deg 360deg);
+  padding:12px;position:relative;
+}
+.ring:after{content:"";position:absolute;inset:12px;background:#fff;border-radius:50%}
+.ring-content{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center}
+.ring-label{font-size:12px;color:#625967;margin-bottom:-10px}
+.day{font-size:42px;font-weight:750;letter-spacing:-2px;line-height:1}
+.of{font-size:12px;color:#766b75;margin-top:-6px}
+.hero-divider{height:110px;width:1px;background:#f3dce5;flex-shrink:0}
+.phase-side{flex:1;min-width:0}
+.phase-label{font-size:13px;color:#5e5560}
+.phase-title{font-size:20px;color:var(--pink);font-weight:750;margin:4px 0 8px}
+.phase-text{font-size:13px;line-height:1.4;color:#5e5560}
+.calendar-link{display:inline-flex;align-items:center;gap:6px;color:var(--pink);font-size:13px;font-weight:600;margin-top:10px;background:none}
+
+.summary{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:18px 18px 0;
+}
+.summary-card{
+  background:#fff;border-radius:22px;padding:16px 6px;text-align:center;
+  box-shadow:var(--shadow);min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.circle{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;margin-bottom:10px}
+.c-pink{background:#fde3eb;color:var(--pink)}
+.c-green{background:#e1f7e9;color:var(--green)}
+.c-yellow{background:#fff1d5;color:#efa900}
+.phase-icon {
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+}
+.phase-icon svg {
+  width: 58px;
+  height: 58px;
+}
+.period-icon {
+  background: #fde7ef;
+  color: #e82d68;
+}
+.fertile-icon {
+  background: #e1f6eb;
+  color: #36bd78;
+}
+.ovulation-icon {
+  background: #fff1d5;
+  color: #efa912;
+}
+.summary-title{font-size:14px;color:#5b5360;margin-bottom:4px;font-weight:600}
+.summary-value{font-size:13px;color:var(--text);font-weight:700}
+.dot{width:8px;height:8px;border-radius:50%;margin-top:10px}
+.dot-pink{background:var(--pink)}.dot-green{background:var(--green)}.dot-yellow{background:#f2b51c}
+
+.quick{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 0;
+  width:100%;box-sizing:border-box;
+}
+.quick-card{
+  min-height:0;border-radius:22px;padding:14px 12px;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:8px;
+  text-align:left;min-width:0;width:100%;box-sizing:border-box;
+  position:relative;
+}
+.period{background:linear-gradient(135deg,#ffeaf2,#f9c9dc);color:var(--pink)}
+.intimacy{background:linear-gradient(135deg,#e2f7f6,#bfe5e3);color:var(--mint-dark)}
+.quick-icon{
+  width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.58);
+  border:1px solid rgba(255,255,255,.8);display:grid;place-items:center;flex:0 0 auto;
+}
+.quick-icon svg.icon-lg{width:24px;height:24px}
+.quick-card > div:not(.quick-icon):not(.arrow){
+  width:100%;min-width:0;
+}
+.quick-title{
+  font-size:15px;font-weight:750;line-height:1.2;
+  white-space:normal;overflow:visible;text-overflow:unset;
+  word-break:normal;
+}
+.quick-sub{
+  font-size:12px;margin-top:3px;opacity:.78;line-height:1.25;
+  white-space:normal;overflow:visible;text-overflow:unset;
+}
+.arrow{
+  position:absolute;top:12px;right:10px;
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(255,255,255,.55);display:grid;place-items:center;
+  font-size:14px;
+}
+@media(max-width:380px){
+  .quick{gap:8px;padding:14px 14px 0}
+  .quick-card{padding:12px 10px}
+  .quick-title{font-size:14px}
+  .quick-sub{font-size:11px}
+}
+
+
+.symptoms{
+  margin:16px 18px 0;background:#fff;border-radius:27px;padding:22px 16px 18px;box-shadow:var(--shadow);
+}
+.section-title{font-family:Georgia,serif;font-size:24px;margin:0 0 18px;letter-spacing:-.4px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.symptom{
+  min-height:115px;border:2px solid var(--pink-border);background:#fff;border-radius:19px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#766b75;
+  transition:.18s transform,.18s background,.18s color,.18s border-color;padding:8px 4px;
+}
+.symptom:active{transform:scale(.97)}
+.symptom.selected,.symptom.on{background:#fff0f5;color:var(--pink);border-color:var(--pink)}
+.symptom-icon{width:36px;height:36px;color:inherit}
+.symptom-label{font-size:12px;text-align:center;line-height:1.2;font-weight:600}
+.save,.btn-primary{
+  width:100%;margin-top:18px;min-height:56px;border-radius:22px;
+  background:linear-gradient(90deg,#f36d9c,#ed1760);color:#fff;font-weight:750;font-size:16px;
+  box-shadow:0 12px 24px rgba(237,45,105,.18);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.save.saved{background:#25b985}
+.btn-ghost{
+  width:100%;background:var(--pink-light);color:var(--pink);border:none;border-radius:18px;
+  padding:14px;font-weight:700;font-size:14px;cursor:pointer;
+}
+
+/* Calendar card + other cards */
+.card{
+  margin:16px 18px 0;background:#fff;border-radius:24px;padding:18px;box-shadow:var(--shadow);
+}
+.card h2{font-family:Georgia,serif;font-size:20px;margin:0 0 14px;font-weight:600}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav button{width:36px;height:36px;border:none;border-radius:12px;background:var(--pink-light);color:var(--pink);font-size:18px;font-weight:700;cursor:pointer}
+.cal-nav .month-label{font-weight:800;font-size:15px;text-transform:capitalize}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal-grid .wd{font-size:11px;color:var(--muted);padding-bottom:6px;font-weight:700}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:13px;font-weight:600;position:relative;border:0;padding:0;font-family:inherit;cursor:pointer;background:transparent;color:inherit}
+.cal-day.muted{color:transparent;pointer-events:none}
+.cal-day.period{background:linear-gradient(145deg,#f45b8a,var(--pink));color:#fff;font-weight:800}
+.cal-day.fertile{background:#e1f7e9;color:var(--green);font-weight:700}
+.cal-day.ovulation{background:linear-gradient(145deg,#ffd54f,var(--yellow));color:#fff;font-weight:800}
+.cal-day.predicted{border:1.5px dashed var(--pink);color:var(--pink);background:rgba(237,45,105,.05)}
+.cal-day.today::after{content:"";position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--pink)}
+.cal-day.intimacy{box-shadow:inset 0 0 0 2px #d94f72}
+.cal-day.intimacy::before{content:"";position:absolute;top:4px;right:5px;width:6px;height:6px;border-radius:50%;background:#d94f72}
+.cal-day.intimacy.period{box-shadow:inset 0 0 0 2px #fff}
+.cal-day.intimacy.period::before{background:#fff}
+.cal-day.period.today::after,.cal-day.ovulation.today::after{background:#fff}
+.legend{display:flex;flex-wrap:wrap;gap:10px 12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--pink-border);font-size:11px;color:var(--muted);font-weight:700}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:4px;display:inline-block}
+
+.log-item{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--pink-border)}
+.log-item:last-child{border-bottom:none}
+.li-left{display:flex;align-items:center;gap:12px}
+.li-icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:18px}
+.li-icon.period{background:#fde3eb}.li-icon.intim{background:#e2f7f6}
+.li-title{font-weight:700;font-size:14px}.li-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.li-del{background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;padding:6px 8px}
+.empty{text-align:center;padding:28px 12px;color:var(--muted);font-size:14px}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.field input[type=date],.field input[type=number]{
+  width:100%;padding:13px 14px;border-radius:16px;border:1.5px solid var(--pink-border);font:inherit;font-size:15px;background:#fff
+}
+.field input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-light)}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--pink-border);gap:12px}
+.toggle-row:last-child{border-bottom:none}
+.tr-title{font-weight:700;font-size:14px}.tr-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.switch{position:relative;width:48px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:#e8d5dc;border-radius:20px;transition:.2s}
+.slider::before{content:"";position:absolute;height:22px;width:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.switch input:checked + .slider{background:var(--pink)}
+.switch input:checked + .slider::before{transform:translateX(20px)}
+.small-note{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:8px}
+.status-pill{display:inline-block;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;background:var(--pink-light);color:var(--pink)}
+.status-pill.on{background:#e1f7e9;color:var(--green)}
+
+.bottom, nav.bottom{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;
+  background:rgba(255,255,255,.97);border-top:1px solid #f0dde5;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+  z-index:40;backdrop-filter:blur(14px);
+}
+.nav, .nav-btn{
+  background:transparent;color:#928791;min-height:68px;border-radius:22px;border:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  font-size:13px;font-weight:650;cursor:pointer;padding:8px 0;font-family:inherit;
+}
+.nav svg, .nav-btn svg, .nav-icon{width:26px;height:26px;color:inherit}
+.nav.active, .nav-btn.active{background:#fde7ef;color:var(--pink)}
+
+.toast{
+  position:fixed;left:50%;bottom:110px;transform:translate(-50%,20px);opacity:0;
+  background:#292632;color:#fff;padding:13px 19px;border-radius:15px;font-size:14px;
+  transition:.25s;z-index:50;pointer-events:none;max-width:88%;text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal-bg{position:fixed;inset:0;background:rgba(41,38,50,.4);display:none;align-items:flex-end;justify-content:center;z-index:60;backdrop-filter:blur(4px)}
+.modal-bg.show{display:flex}
+.modal{background:#fff;width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:24px 22px calc(24px + env(safe-area-inset-bottom));animation:up .25s ease}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.modal h3{font-size:20px;font-weight:750;margin:0 0 16px}
+.modal-actions{display:flex;gap:10px;margin-top:8px}
+.modal-actions .btn-ghost,.modal-actions .btn-primary{flex:1}
+
+@media(max-width:380px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .ring{width:120px;height:120px;flex-basis:120px}
+  .day{font-size:36px}
+}
+
+.menu-bg{position:fixed;inset:0;background:rgba(41,38,50,.35);z-index:80;display:none;backdrop-filter:blur(3px)}
+.menu-bg.show{display:block}
+.menu-drawer{position:fixed;top:0;left:0;bottom:0;width:min(320px,86vw);background:#fff;z-index:90;transform:translateX(-105%);transition:transform .28s cubic-bezier(.22,1,.36,1);box-shadow:8px 0 32px rgba(0,0,0,.12);display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top)) 0 20px;overflow-y:auto}
+.menu-drawer.open{transform:translateX(0)}
+.menu-head{padding:8px 20px 16px;border-bottom:1px solid var(--pink-border)}
+.menu-head .hello{font-size:13px;color:var(--muted);margin:0 0 2px}
+.menu-head .name{font-size:20px;font-weight:800;color:var(--text);margin:0}
+.menu-section{padding:14px 12px 6px}
+.menu-section-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 10px 8px}
+.menu-item{width:100%;display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:16px;background:transparent;color:var(--text);font-size:15px;font-weight:650;text-align:left}
+.menu-item:active{background:var(--pink-light);color:var(--pink)}
+.menu-item svg{width:22px;height:22px;flex-shrink:0}
+.menu-profile{padding:8px 20px 12px}
+.menu-profile .field{margin-bottom:10px}
+.menu-profile label{font-size:12px}
+.menu-profile input{width:100%;padding:11px 12px;border-radius:14px;border:1.5px solid var(--pink-border);font:inherit;font-size:14px;background:#fff}
+.menu-profile input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-light)}
+.menu-save{margin-top:6px;width:100%;min-height:48px;border-radius:16px;font-size:14px}
+.menu-close,.notif-close{width:40px;height:40px;border-radius:14px;background:var(--pink-light);color:var(--pink);display:grid;place-items:center;border:none;cursor:pointer}
+.notif-panel-bg{position:fixed;inset:0;background:rgba(41,38,50,.35);z-index:80;display:none;backdrop-filter:blur(3px)}
+.notif-panel-bg.show{display:block}
+.notif-panel{position:fixed;top:0;right:0;bottom:0;width:min(340px,100vw);box-sizing:border-box;background:#fff;z-index:90;transform:translateX(105%);transition:transform .28s cubic-bezier(.22,1,.36,1);box-shadow:-8px 0 32px rgba(0,0,0,.12);display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top)) 18px 24px;overflow-y:auto;overflow-x:hidden}
+.notif-panel.open{transform:translateX(0)}
+.notif-panel h3{font-size:20px;font-weight:800;margin:0 0 4px}
+.notif-panel .sub{font-size:13px;color:var(--muted);margin:0 0 16px}.notif-panel .toggle-row,.notif-panel .field,.notif-panel .btn-primary{box-sizing:border-box;max-width:100%}.notif-panel .btn-primary{width:100%}
+.notif-close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:12px}
+nav.bottom,.bottom{display:none!important}
+#app{padding-bottom:28px!important}
+
+
+.daily-tip{
+  margin:16px 18px 0;background:#fff;border-radius:24px;padding:18px 16px;
+  box-shadow:var(--shadow);border:1px solid var(--pink-border);
+}
+.daily-tip .tip-kicker{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--pink);margin:0 0 6px}
+.daily-tip .tip-text{font-size:15px;line-height:1.45;color:var(--text);margin:0}
+.daily-tip .tip-cat{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;color:var(--muted);background:var(--pink-light);padding:4px 10px;border-radius:12px}
+.first-run-bar{
+  position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120%);
+  width:min(480px,calc(100% - 24px));z-index:100;
+  background:#fff;border-radius:22px;padding:16px 16px 14px;
+  box-shadow:0 16px 40px rgba(41,38,50,.2);border:1px solid var(--pink-border);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+.first-run-bar.show{transform:translateX(-50%) translateY(0)}
+.first-run-bar h4{margin:0 0 6px;font-size:16px;font-weight:800;color:var(--text)}
+.first-run-bar p{margin:0 0 12px;font-size:13px;line-height:1.4;color:var(--muted)}
+.first-run-actions{display:flex;gap:8px}
+.first-run-actions button{flex:1;min-height:44px;border-radius:14px;font-weight:700;font-size:14px}
+.first-run-actions .yes{background:linear-gradient(90deg,#f36d9c,#ed1760);color:#fff}
+.first-run-actions .no{background:var(--pink-light);color:var(--pink)}
+
+
+/* Animação dos botões de salvar */
+.btn-save-success {
+  animation: saveButtonPulse .55s ease;
+}
+@keyframes saveButtonPulse {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.menu-profile-toggle{width:100%;border:0;background:none;text-align:left;padding:0;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font:inherit;}
+.profile-toggle-icon{font-size:24px;line-height:1;transition:transform .2s ease;}
+.menu-profile-toggle[aria-expanded="true"] .profile-toggle-icon{transform:rotate(90deg);}
+
+/* ---------- Primeiro acesso ---------- */
+.first-access{position:fixed;inset:0;z-index:99999;background:linear-gradient(145deg,#fff7fa 0%,#fff 48%,#fff0f5 100%);display:none;align-items:center;justify-content:center;padding:18px;overflow:auto}
+.first-access.show{display:flex;animation:firstAccessScreenIn .45s ease both}
+.first-access::before,.first-access::after{content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(2px);opacity:.7}
+.first-access::before{width:180px;height:180px;left:-70px;top:9%;background:rgba(246,105,157,.13);animation:firstAccessFloat 5s ease-in-out infinite}
+.first-access::after{width:230px;height:230px;right:-100px;bottom:4%;background:rgba(255,186,211,.22);animation:firstAccessFloat 6s ease-in-out infinite reverse}
+.first-access-card{position:relative;z-index:1;width:min(430px,100%);text-align:center;background:rgba(255,255,255,.96);border:1px solid rgba(239,107,153,.18);border-radius:34px;padding:24px 22px 22px;box-shadow:0 24px 70px rgba(180,63,105,.16);backdrop-filter:blur(12px);overflow:hidden;animation:firstAccessCardIn .65s cubic-bezier(.2,.8,.2,1) both}
+.first-access-card::after{content:"";position:absolute;left:14%;right:14%;top:0;height:4px;border-radius:0 0 10px 10px;background:linear-gradient(90deg,#f7a5c2,#ed1760,#f7a5c2);opacity:.9}
+.first-access-icon-area{position:relative;width:132px;height:132px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center}
+.first-access-spark{position:absolute;width:13px;height:17px;background:linear-gradient(145deg,#ff6f9f 0%,#d91655 65%,#b90d45 100%);border-radius:70% 70% 70% 12%;transform:rotate(-45deg);box-shadow:0 5px 12px rgba(185,13,69,.20);animation:firstAccessSpark 2.2s ease-in-out infinite}
+.first-access-spark.s1{top:1px;right:16px}.first-access-spark.s2{bottom:8px;left:10px;width:9px;height:13px;animation-delay:.7s}.first-access-spark.s3{top:41px;left:0;width:8px;height:11px;animation-delay:1.2s}
+.first-access-spark::after{content:"";position:absolute;width:3px;height:5px;border-radius:50%;background:rgba(255,255,255,.55);top:3px;left:5px;transform:rotate(45deg)}
+.first-access-icon-wrap{width:108px;height:108px;border-radius:24px;padding:0;background:transparent;box-shadow:none;display:flex;align-items:center;justify-content:center;animation:firstAccessIcon 2.8s ease-in-out infinite}
+.first-access-icon{width:100%;height:100%;object-fit:contain;border-radius:0;display:block}
+.first-access h1{margin:0 0 8px;font-size:29px;line-height:1.12;letter-spacing:-.6px;background:linear-gradient(90deg,#2d2936,#d51b57,#2d2936);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:firstAccessFade .7s .22s both,firstAccessTitleGlow 4s ease-in-out .9s infinite}
+.first-access p{margin:0 auto 20px;max-width:350px;color:var(--muted);line-height:1.5;font-size:15px;animation:firstAccessFade .7s .3s both}
+.first-access-fields{display:grid;grid-template-columns:1fr 118px;gap:12px;text-align:left;margin-bottom:12px;animation:firstAccessFieldsIn .7s .35s both}
+.first-access .field{margin:0}
+.first-access .field label{display:flex;align-items:center;gap:7px;margin:0 0 7px;padding-left:2px;font-weight:850;font-size:13px;color:var(--text)}
+.first-access .field label::before{content:"";width:7px;height:7px;border-radius:50%;background:#f17aa6;box-shadow:0 0 0 4px rgba(241,122,166,.10)}
+.first-access input{width:100%;box-sizing:border-box;border:1.5px solid #eadce2;border-radius:17px;background:#fff;min-height:54px;padding:0 15px;font-size:16px;font-weight:650;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s,transform .2s,background .2s}
+.first-access input::placeholder{color:#aaa0a6;font-weight:500}
+.first-access input:focus{border-color:#ef6b99;background:#fffafd;box-shadow:0 0 0 4px rgba(239,107,153,.11),0 8px 20px rgba(239,107,153,.08);transform:translateY(-1px)}
+.first-access-btn{position:relative;overflow:hidden;width:100%;min-height:56px;border:0;border-radius:18px;background:linear-gradient(135deg,#f56e9e 0%,#ed1760 100%);color:#fff;font-weight:850;font-size:17px;cursor:pointer;box-shadow:0 12px 26px rgba(237,23,96,.22);transition:transform .18s,box-shadow .18s;animation:firstAccessFieldsIn .7s .45s both}
+.first-access-btn::before{content:"";position:absolute;top:0;bottom:0;width:42%;left:-55%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.30),transparent);transform:skewX(-18deg);animation:firstAccessShine 3.2s 1.2s ease-in-out infinite}
+.first-access-btn:active{transform:translateY(1px) scale(.99);box-shadow:0 7px 15px rgba(237,23,96,.17)}
+.first-access-error{min-height:18px;margin:0 0 7px;color:#d51b57;font-size:13px;font-weight:700}
+ .first-access-animation{position:fixed;inset:0;z-index:100000;background:radial-gradient(circle at 50% 25%,#ffeaf2,#fff 65%);display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;overflow:hidden}.first-access-animation.show{display:flex}.uterus-animation{width:360px;max-width:90vw;height:auto;display:block}.uterus-animation #uterusBlood{transform:translateY(-330px);animation:uterusFillBlood 4s ease-in-out forwards}.uterus-animation .uterus-svg-blood{transform-box:fill-box;transform-origin:center}@keyframes uterusFillBlood{0%{transform:translateY(-330px)}55%{transform:translateY(0)}75%{transform:translateY(0)}100%{transform:translateY(0)}}.first-access-animation h2{margin:18px 0 6px;font-size:25px;color:var(--text);animation:firstAccessFade 1s ease both}.first-access-animation p{margin:0;color:var(--muted);font-size:14px}@media(prefers-reduced-motion:reduce){.uterus-animation #uterusBlood{animation:none;transform:translateY(0)}}
+@media(max-width:430px){.first-access{padding:14px}.first-access-card{padding:21px 18px 18px;border-radius:30px}.first-access-fields{grid-template-columns:1fr 105px;gap:10px}.first-access h1{font-size:26px}.first-access-icon-area{width:120px;height:120px}.first-access-icon-wrap{width:92px;height:92px}.first-access p{font-size:14px;margin-bottom:17px}.first-access input{min-height:52px}.first-access-btn{min-height:54px}}
+@media(prefers-reduced-motion:reduce){.first-access *, .first-access::before, .first-access::after{animation:none!important}}
+.legal-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.legal-link{border:0;background:var(--pink-light);color:var(--pink);font:inherit;font-weight:750;padding:13px 12px;border-radius:16px;cursor:pointer;text-decoration:none;min-height:48px}
+.legal-modal{position:fixed;inset:0;background:rgba(28,18,23,.42);display:none;align-items:center;justify-content:center;padding:20px;z-index:140}
+.legal-modal.show{display:flex}
+.legal-card{width:min(720px,100%);max-height:min(82vh,760px);overflow:auto;background:#fff;border-radius:24px;padding:24px;box-shadow:0 18px 60px rgba(0,0,0,.18);position:relative}
+.legal-card h2{margin:0 42px 8px 0;color:var(--text)}
+.legal-card h3{margin:20px 0 8px;color:var(--text);font-size:16px}
+.legal-card p,.legal-card li{color:var(--muted);line-height:1.6;font-size:14px}.legal-card li{margin:8px 0}
+.legal-card ul{list-style:none;padding-left:0;margin-left:0}
+.legal-close{position:absolute;right:16px;top:14px;border:0;background:#f8edf1;width:38px;height:38px;border-radius:50%;font-size:22px;cursor:pointer;color:var(--text)}
+
+@media(max-width:430px){.first-access-fields{grid-template-columns:1fr 105px}.first-access h1{font-size:25px}}
+
+</style>
+</head>
+<body>
+<div class="first-access" id="firstAccess">
+  <div class="first-access-card">
+        <div class="first-access-icon-area">
+      <span class="first-access-spark s1"></span><span class="first-access-spark s2"></span><span class="first-access-spark s3"></span>
+      <div class="first-access-icon-wrap"><img class="first-access-icon" src="data:image/png;base64,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" alt="Ícone do app"></div>
+    </div>
+    <h1>Olá, mulher</h1>
+    <p>Vamos personalizar seu calendário. Informe seu nome e sua idade para continuar.</p>
+    <div class="first-access-fields">
+      <div class="field"><label for="firstAccessName">Nome</label><input type="text" id="firstAccessName" placeholder="Digite seu nome" maxlength="40" autocomplete="name"></div>
+      <div class="field"><label for="firstAccessAge">Idade</label><input type="number" id="firstAccessAge" min="10" max="70" placeholder="Anos" inputmode="numeric"></div>
+    </div>
+    <div class="first-access-error" id="firstAccessError"></div>
+    <button class="first-access-btn" type="button" onclick="finishFirstAccess()">Continuar</button>
+  </div>
+</div>
+<div class="first-access-animation" id="firstAccessAnimation">
+  <svg class="uterus-animation" viewBox="0 0 700 650" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animação do útero sendo preenchido por sangue">
+    <defs>
+      <clipPath id="uterusInsideAnimation">
+        <path d="M285 215 C310 200 390 200 415 215 C395 240 383 270 378 305 L365 390 C360 430 356 475 350 515 C344 475 340 430 335 390 L322 305 C317 270 305 240 285 215Z"/>
+      </clipPath>
+      <linearGradient id="bloodGradientAnimation" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ff5964"/>
+        <stop offset="55%" stop-color="#d92735"/>
+        <stop offset="100%" stop-color="#9e101d"/>
+      </linearGradient>
+    </defs>
+
+    <path d="M285 215 C245 195 205 178 160 185 C120 191 92 215 82 245 C76 264 84 280 105 288" fill="none" stroke="#682630" stroke-width="60" stroke-linecap="round"/>
+    <path d="M285 215 C245 195 205 178 160 185 C120 191 92 215 82 245 C76 264 84 280 105 288" fill="none" stroke="#e98995" stroke-width="44" stroke-linecap="round"/>
+    <path d="M415 215 C455 195 495 178 540 185 C580 191 608 215 618 245 C624 264 616 280 595 288" fill="none" stroke="#682630" stroke-width="60" stroke-linecap="round"/>
+    <path d="M415 215 C455 195 495 178 540 185 C580 191 608 215 618 245 C624 264 616 280 595 288" fill="none" stroke="#e98995" stroke-width="44" stroke-linecap="round"/>
+    <ellipse cx="105" cy="315" rx="55" ry="50" fill="#ffc78e" stroke="#682630" stroke-width="8"/>
+    <ellipse cx="595" cy="315" rx="55" ry="50" fill="#ffc78e" stroke="#682630" stroke-width="8"/>
+    <path d="M285 215 C295 160 325 125 350 125 C375 125 405 160 415 215 C450 225 470 252 465 288 C461 320 440 348 425 375 C410 405 407 440 405 478 C403 510 388 540 370 555 L350 535 L330 555 C312 540 297 510 295 478 C293 440 290 405 275 375 C260 348 239 320 235 288 C230 252 250 225 285 215Z" fill="#ea8995" stroke="#682630" stroke-width="10"/>
+    <path d="M285 215 C310 200 390 200 415 215 C395 240 383 270 378 305 L365 390 C360 430 356 475 350 515 C344 475 340 430 335 390 L322 305 C317 270 305 240 285 215Z" fill="#c95865" stroke="#742832" stroke-width="7"/>
+
+    <g clip-path="url(#uterusInsideAnimation)">
+      <rect id="uterusBlood" x="260" y="185" width="180" height="350" fill="url(#bloodGradientAnimation)"/>
+    </g>
+
+    <path d="M330 390 C335 378 342 370 350 370 C358 370 365 378 370 390 L375 520 C370 542 330 542 325 520Z" fill="#ea8995" stroke="#682630" stroke-width="8"/>
+  </svg>
+  <h2>Força, mulher</h2>
+  <p>Seu calendário está ficando pronto para você.</p>
+</div>
+
+<div id="app">
+
+  <header class="top">
+  <button class="top-btn" type="button" aria-label="Menu" onclick="openMenu()">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="logo">
+    <div class="logo-main">
+      Calendário Mestrual
+    </div>
+    <div class="logo-sub" id="greetLine">Seu bem-estar em primeiro lugar</div>
+  </div>
+  <button class="top-btn" type="button" aria-label="Notificações" onclick="openNotifPanel()">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+  </button>
+</header>
+
+  <!-- HOME -->
+  <section class="view active" id="view-home">
+  <section class="hero">
+    <div class="ring" id="ringEl">
+      <div class="ring-content">
+        <div class="ring-label">Dia do ciclo</div>
+        <div class="day" id="dayNumber">–</div>
+        <div class="of" id="daySub">de –</div>
+      </div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="phase-side">
+      <div class="phase-label">Fase atual</div>
+      <div class="phase-title" id="phaseLabel">–</div>
+      <div class="phase-text" id="phaseAdvice">Registre a última menstruação para ver seu ciclo.</div>
+      <button type="button" class="calendar-link" onclick="document.getElementById('calendarCard').scrollIntoView({behavior:'smooth'})">Ver calendário <span>›</span></button>
+    </div>
+  </section>
+
+  <div class="daily-tip" id="dailyTipCard" style="display:none">
+    <p class="tip-kicker">Dica de hoje</p>
+    <p class="tip-text" id="dailyTipText"></p>
+    <span class="tip-cat" id="dailyTipCat"></span>
+  </div>
+
+  <section class="summary">
+    <div class="summary-card">
+      <div class="phase-icon period-icon">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M32 8
+                   C32 8 16 27 16 39
+                   C16 49 23 56 32 56
+                   C41 56 48 49 48 39
+                   C48 27 32 8 32 8Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linejoin="round"/>
+          <path d="M24 42 C25 47 28 49 32 50"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="summary-title">Período</div>
+      <div class="summary-value" id="nextPeriod">–</div>
+      <div class="dot dot-pink"></div>
+    </div>
+    <div class="summary-card">
+      <div class="phase-icon fertile-icon">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M12 50
+                   C20 30 34 17 53 13
+                   C49 32 37 46 12 50Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linejoin="round"/>
+          <path d="M13 51
+                   C25 40 34 30 44 20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3.5"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="summary-title">Fértil</div>
+      <div class="summary-value" id="nextFertile">–</div>
+      <div class="dot dot-green"></div>
+    </div>
+    <div class="summary-card">
+      <div class="phase-icon ovulation-icon">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="13"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="4"/>
+          <circle cx="32" cy="32" r="5"
+                  fill="currentColor"/>
+          <path d="M32 7V14
+                   M32 50V57
+                   M7 32H14
+                   M50 32H57
+                   M14.3 14.3L19.3 19.3
+                   M44.7 44.7L49.7 49.7
+                   M49.7 14.3L44.7 19.3
+                   M19.3 44.7L14.3 49.7"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3.5"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="summary-title">Ovulação</div>
+      <div class="summary-value" id="nextOvul">–</div>
+      <div class="dot dot-yellow"></div>
+    </div>
+  </section>
+
+  
+  <div class="card" id="cycleStats" style="display:none">
+    <h2>O seu ciclo</h2>
+    <div class="summary" style="padding:0;gap:8px">
+      <div class="summary-card" style="min-height:auto;padding:12px 6px">
+        <div class="summary-title">Média</div>
+        <div class="summary-value" id="statAvgCycle">–</div>
+      </div>
+      <div class="summary-card" style="min-height:auto;padding:12px 6px">
+        <div class="summary-title">Registos</div>
+        <div class="summary-value" id="statPeriodCount">–</div>
+      </div>
+      <div class="summary-card" style="min-height:auto;padding:12px 6px">
+        <div class="summary-title">Última</div>
+        <div class="summary-value" id="statLastPeriod">–</div>
+      </div>
+    </div>
+    <p class="small-note" id="statNote" style="margin-top:10px">Com 2 ou mais menstruações, a média do ciclo é calculada automaticamente.</p>
+  </div>
+
+  <section class="quick">
+    <button type="button" class="quick-card period" onclick="openModal('period')">
+      <div class="quick-icon">
+        <svg class="icon-lg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M24 6S13 20 13 29a11 11 0 0 0 22 0C35 20 24 6 24 6Z"/><path d="M18 31c0 3 2 5 5 6"/></svg>
+      </div>
+      <div>
+        <div class="quick-title">Menstruação</div>
+        <div class="quick-sub">Registrar período</div>
+      </div>
+      <div class="arrow">›</div>
+    </button>
+    <button type="button" class="quick-card intimacy" onclick="logIntimacy()">
+      <div class="quick-icon">
+        <svg class="icon-lg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M24 39S7 29 7 17c0-6 4-10 9-10 4 0 7 2 8 5 1-3 4-5 8-5 5 0 9 4 9 10 0 12-17 22-17 22Z"/></svg>
+      </div>
+      <div>
+        <div class="quick-title">Intimidade</div>
+        <div class="quick-sub">Registrar momento</div>
+      </div>
+      <div class="arrow">›</div>
+    </button>
+  </section>
+
+  <section class="symptoms" id="symptomCard">
+    <h2 class="section-title">Como está hoje?</h2>
+    <div class="grid" id="symptomGrid">
+      <button type="button" class="symptom" data-sym="fluxo-leve" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M24 6S14 18 14 27a10 10 0 0 0 20 0C34 18 24 6 24 6Z"/><path d="M18 29c0 3 2 5 5 5"/></svg>
+        <span class="symptom-label">Fluxo leve</span>
+      </button>
+      <button type="button" class="symptom" data-sym="fluxo-medio" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8S10 17 10 23a7 7 0 0 0 14 0C24 17 17 8 17 8Z"/><path d="M32 18S26 26 26 31a6 6 0 0 0 12 0c0-5-6-13-6-13Z"/></svg>
+        <span class="symptom-label">Fluxo médio</span>
+      </button>
+      <button type="button" class="symptom" data-sym="fluxo-forte" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="currentColor"><path d="M24 5S12 19 12 29a12 12 0 0 0 24 0C36 19 24 5 24 5Z"/></svg>
+        <span class="symptom-label">Fluxo forte</span>
+      </button>
+      <button type="button" class="symptom" data-sym="dor" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.7"><path d="m26 4-15 23h10l-2 17 15-25H24l2-15Z"/></svg>
+        <span class="symptom-label">Cólica</span>
+      </button>
+      <button type="button" class="symptom" data-sym="humor-bom" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="24" r="18"/><path d="M17 20h.01M31 20h.01"/><path d="M16 29c3 5 13 5 16 0"/></svg>
+        <span class="symptom-label">Bem</span>
+      </button>
+      <button type="button" class="symptom" data-sym="humor-ruim" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="24" r="18"/><path d="M17 20h.01M31 20h.01"/><path d="M16 32c3-4 13-4 16 0"/></svg>
+        <span class="symptom-label">Mal</span>
+      </button>
+      <button type="button" class="symptom" data-sym="cansaco" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M35 29a14 14 0 1 1-16-16 11 11 0 0 0 16 16Z"/><path d="M30 10h7M33.5 6.5v7M38 17h5M40.5 14.5v5"/></svg>
+        <span class="symptom-label">Cansaço</span>
+      </button>
+      <button type="button" class="symptom" data-sym="dor-cabeca" onclick="toggleSymptom(this)">
+        <svg class="symptom-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 27c0-11 7-18 17-18 8 0 13 5 13 12 0 8-6 13-14 13h-6l-5 5v-7c-3-1-5-3-5-5Z"/><path d="M31 18l3 3M34 18l-3 3M37 13h.01"/></svg>
+        <span class="symptom-label">Dor de cabeça</span>
+      </button>
+    </div>
+    <button type="button" class="save" id="saveBtn" onclick="saveSymptoms()">
+      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5z"/><path d="M8 4v6h8V4M8 17h6"/><path d="M15 15h6M18 12l3 3-3 3"/></svg>
+      Salvar sintomas de hoje
+    </button>
+  </section>
+
+  <div class="card" id="calendarCard">
+    <div class="cal-nav">
+      <button type="button" onclick="changeMonth(-1)">‹</button>
+      <div class="month-label" id="monthLabel">–</div>
+      <button type="button" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="legend">
+      <span><i style="background:var(--pink)"></i>Período</span>
+      <span><i style="background:#e1f7e9;border:1px solid var(--green)"></i>Fértil</span>
+      <span><i style="background:var(--yellow)"></i>Ovulação</span>
+      <span><i style="border:1.5px dashed var(--pink);background:transparent"></i>Previsão</span>
+      <span><i style="border:2px solid #d94f72;background:transparent"></i>Intimidade</span>
+    </div>
+  </div>
+</section>
+
+  <!-- HISTÓRICO -->
+  <section class="view" id="view-log">
+    <div class="card">
+      <h2>Menstruações registradas</h2>
+      <div id="periodList"></div>
+    </div>
+    <div class="card">
+      <h2>Intimidade registrada</h2>
+      <div id="intimList"></div>
+    </div>
+  </section>
+
+  <!-- CONFIG -->
+  <section class="view" id="view-settings">
+    <div class="card">
+      <h2>Seu ciclo</h2>
+      <div class="field">
+        <label for="cycleLen">Duração média do ciclo (dias)</label>
+        <input type="number" id="cycleLen" min="18" max="45">
+      </div>
+      <div class="field">
+        <label for="periodLen">Duração média da menstruação (dias)</label>
+        <input type="number" id="periodLen" min="1" max="12">
+      </div>
+      <button class="btn-primary" onclick="saveCycleSettings()">Salvar</button>
+    </div>
+
+    <div class="card">
+      <h2>Notificações</h2>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-title">Janela fértil</div>
+          <div class="tr-sub">Avisa com voz feminina nos dias mais indicados</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="notifFertile"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-title">Lembrete de intimidade</div>
+          <div class="tr-sub">Avisa quando passar muito tempo sem registro</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="notifIntim"><span class="slider"></span></label>
+      </div>
+      <div class="field" style="margin-top:12px;">
+        <label for="intimThreshold">Avisar após quantos dias sem intimidade</label>
+        <input type="number" id="intimThreshold" min="1" max="60">
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-title">Lembrete de menstruação</div>
+          <div class="tr-sub">Avisa 2 dias antes da data prevista</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="notifPeriod"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-title">Dicas diárias</div>
+          <div class="tr-sub">Uma dica de higiene e bem-estar por dia</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="dailyTipsToggle"><span class="slider"></span></label>
+      </div>
+      <button class="btn-primary" style="margin-top:14px;" onclick="saveNotifSettings()">Salvar notificações</button>
+      <p class="small-note">Os avisos locais usam a voz do aparelho enquanto o app está aberto.</p>
+    </div>
+
+    <div class="card">
+      <h2>Privacidade e termos</h2>
+      <p class="small-note">Leia como o app trata os seus dados e as regras de utilização.</p>
+      <div class="legal-links">
+        <button type="button" class="legal-link" onclick="openLegal('privacy')">Política de Privacidade</button>
+        <button type="button" class="legal-link" onclick="openLegal('terms')">Termos de Uso</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- nav no menu -->
+
+
+  
+<div class="menu-bg" id="menuBg" onclick="closeMenu()"></div>
+<aside class="menu-drawer" id="menuDrawer">
+  <div class="menu-head">
+    <div style="display:flex;align-items:flex-start;gap:8px">
+      <div style="flex:1">
+        <p class="hello" id="menuHello">Olá</p>
+      </div>
+      <button type="button" class="menu-close" onclick="closeMenu()" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="menu-section">
+    <div class="menu-section-title">Navegação</div>
+    <button type="button" class="menu-item" onclick="menuGo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9Z"/></svg>
+      Início
+    </button>
+    <button type="button" class="menu-item" onclick="menuGo('log')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+      Histórico
+    </button>
+    <button type="button" class="menu-item" onclick="menuGo('settings')">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <g fill="none" stroke="#d94f72" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18.5 16.5c-2.8-1.8-5.2-2.2-7.4-1.2-2.1 1-3.5 2.9-3.5 5.1 0 2.2 1.6 3.8 3.7 3.8h4.1"/>
+          <path d="M29.5 16.5c2.8-1.8 5.2-2.2 7.4-1.2 2.1 1 3.5 2.9 3.5 5.1 0 2.2-1.6 3.8-3.7 3.8h-4.1"/>
+          <circle cx="8.4" cy="24.3" r="3.8" fill="#f7a7b8"/>
+          <circle cx="39.6" cy="24.3" r="3.8" fill="#f7a7b8"/>
+          <path d="M18.2 13.8c1.2 1.9 3.1 2.8 5.8 2.8s4.6-.9 5.8-2.8"/>
+          <path d="M18.2 13.8c-.4 4.3-.2 8.4 1.1 11.8 1 2.8 2.6 4.7 4.7 5.7 2.1-1 3.7-2.9 4.7-5.7 1.3-3.4 1.5-7.5 1.1-11.8"/>
+          <path d="M24 31.3v9"/>
+          <path d="M24 40.3c-2.1 0-3.5-1.4-3.5-3.2"/>
+          <path d="M24 40.3c2.1 0 3.5-1.4 3.5-3.2"/>
+        </g>
+        <path d="M19.2 17.1c.8 2.6 1.5 5.6 4.8 8.8 3.3-3.2 4-6.2 4.8-8.8-1.2 1.1-2.8 1.6-4.8 1.6s-3.6-.5-4.8-1.6Z" fill="#ef718a" opacity=".75"/>
+      </svg>
+      Ajustes do ciclo
+    </button>
+  </div>
+  <div class="menu-section">
+    <div class="menu-section-title">Ações rápidas</div>
+    <button type="button" class="menu-item" onclick="closeMenu();openModal('period')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3c3.5 4.5 6 7.8 6 11a6 6 0 1 1-12 0c0-3.2 2.5-6.5 6-11z"/></svg>
+      Registrar menstruação
+    </button>
+    <button type="button" class="menu-item" onclick="closeMenu();logIntimacy()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+      Registrar intimidade
+    </button>
+  </div>
+  <div class="menu-section">
+    <button type="button" class="menu-section-title menu-profile-toggle" id="profileToggle" onclick="toggleProfileSection()" aria-expanded="false">
+      O seu perfil <span class="profile-toggle-icon">›</span>
+    </button>
+    <div class="menu-profile" id="menuProfileContent" style="display:none;">
+      <div class="field"><label for="profileName">Nome</label><input type="text" id="profileName" placeholder="Como quer ser chamada" maxlength="40"></div>
+      <div class="field"><label for="profileAge">Idade</label><input type="number" id="profileAge" min="10" max="70" placeholder="Anos"></div>
+      <div class="field"><label for="profileGoal">Objetivo</label><input type="text" id="profileGoal" placeholder="Ex.: acompanhar o ciclo" maxlength="60"></div>
+      <button type="button" class="btn-primary menu-save" onclick="saveProfile()">Salvar perfil</button>
+    </div>
+  </div>
+</aside>
+
+<div class="notif-panel-bg" id="notifBg" onclick="closeNotifPanel()"></div>
+<aside class="notif-panel" id="notifPanel">
+  <button type="button" class="notif-close" onclick="closeNotifPanel()" aria-label="Fechar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <h3>Notificações</h3>
+  <p class="sub">Lembretes e push com o app fechado</p>
+  <div class="toggle-row"><div><div class="tr-title">Janela fértil</div><div class="tr-sub">Avisa nos dias mais indicados</div></div><label class="switch"><input type="checkbox" id="notifFertilePanel"><span class="slider"></span></label></div>
+  <div class="toggle-row"><div><div class="tr-title">Intimidade</div><div class="tr-sub">Quando passar muitos dias</div></div><label class="switch"><input type="checkbox" id="notifIntimPanel"><span class="slider"></span></label></div>
+  <div class="field" style="margin-top:8px"><label for="intimThresholdPanel">Avisar após quantos dias</label><input type="number" id="intimThresholdPanel" min="1" max="60"></div>
+  <div class="toggle-row"><div><div class="tr-title">Menstruação</div><div class="tr-sub">2 dias antes da prevista</div></div><label class="switch"><input type="checkbox" id="notifPeriodPanel"><span class="slider"></span></label></div>
+  <button type="button" class="btn-primary" style="margin-top:14px" onclick="saveNotifFromPanel()">Salvar lembretes</button>
+</aside>
+
+
+<div class="first-run-bar" id="firstRunTips">
+  <h4>Dicas diárias de cuidado</h4>
+  <p>Quer receber uma dica por dia sobre higiene íntima, bem-estar e ciclo menstrual?</p>
+  <div class="first-run-actions">
+    <button type="button" class="no" onclick="answerDailyTips(false)">Agora não</button>
+    <button type="button" class="yes" onclick="answerDailyTips(true)">Sim, quero</button>
+  </div>
+</div>
+<div class="first-run-bar" id="firstRunNotif">
+  <h4>Ativar notificações?</h4>
+  <p>Permita notificações para lembretes de ciclo, janela fértil e, se quiser, a dica do dia.</p>
+  <div class="first-run-actions">
+    <button type="button" class="no" onclick="answerNotifPrompt(false)">Agora não</button>
+    <button type="button" class="yes" onclick="answerNotifPrompt(true)">Permitir</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+  <div class="modal-bg" id="periodModalBg">
+    <div class="modal">
+      <h3>Registrar início da menstruação</h3>
+      <div class="field">
+        <label for="periodDate">Data de início</label>
+        <input type="date" id="periodDate">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('period')">Cancelar</button>
+        <button class="btn-primary" onclick="savePeriod()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let data = { periods: [], intimacy: [], symptoms: {}, profile: { name: '', age: '', goal: '' }, settings: { cycleLen: 28, periodLen: 5, notifFertile: true, notifIntim: true, notifPeriod: true, intimThreshold: 7, dailyTips: true, tipsOptInDone: false, notifPromptDone: false }, pushSubscription: null };
+let calMonth = new Date();
+calMonth.setDate(1);
+let femaleVoice = null;
+
+// ---------- Persistence ----------
+async function loadData(){
+  try{
+    let raw = null;
+    if(window.storage && typeof window.storage.get === 'function'){
+      const res = await window.storage.get('dados-ciclo', false);
+      if(res && res.value) raw = res.value;
+    }
+    if(!raw){
+      try{ raw = localStorage.getItem('dados-ciclo'); }catch(e){}
+    }
+    if(raw){
+      const parsed = JSON.parse(raw);
+      data = Object.assign(data, parsed);
+      data.settings = Object.assign({cycleLen:28, periodLen:5, notifFertile:true, notifIntim:true, notifPeriod:true, intimThreshold:7, dailyTips:true, tipsOptInDone:false, notifPromptDone:false}, parsed.settings||{});
+      data.symptoms = parsed.symptoms || {};
+      data.profile = Object.assign({ name: '', age: '', goal: '' }, parsed.profile || {});
+    }
+  }catch(e){
+    console.warn('loadData', e);
+  }
+  renderAll();
+}
+
+async function saveData(){
+  const json = JSON.stringify(data);
+  let ok = false;
+  try{
+    if(window.storage && typeof window.storage.set === 'function'){
+      const result = await window.storage.set('dados-ciclo', json, false);
+      ok = !!result;
+    }
+  }catch(e){}
+  try{
+    localStorage.setItem('dados-ciclo', json);
+    ok = true;
+    playSaveSound();
+  }catch(e){
+    if(!ok) showToast('Erro ao salvar dados.');
+  }
+}
+
+// ---------- Navegação ----------
+function switchView(name){
+  if(name==='settings'){
+    const dtt = document.getElementById('dailyTipsToggle');
+    if(dtt) dtt.checked = data.settings.dailyTips !== false;
+  }
+
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+}
+
+function openModal(name){
+  document.getElementById(name+'ModalBg').classList.add('show');
+  document.getElementById('periodDate').value = new Date().toISOString().slice(0,10);
+}
+function closeModal(name){
+  document.getElementById(name+'ModalBg').classList.remove('show');
+}
+
+// ---------- Toast ----------
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+// ---------- Registro ----------
+async function savePeriod(){
+  const val = document.getElementById('periodDate').value;
+  if(!val){ showToast('Escolha uma data.'); return; }
+  data.periods.push(val);
+  data.periods.sort();
+  await saveData();
+  closeModal('period');
+  showToast('Menstruação registrada.');
+  renderAll();
+}
+
+async function logIntimacy(){
+  const today = new Date().toISOString().slice(0,10);
+  data.intimacy.push(today);
+  data.intimacy.sort();
+  await saveData();
+  showToast('Intimidade registrada.');
+  renderAll();
+}
+
+async function toggleCalendarIntimacy(date){
+  if(!date) return;
+  const idx = (data.intimacy||[]).indexOf(date);
+  if(idx >= 0){
+    data.intimacy.splice(idx,1);
+    await saveData();
+    showToast('Registo de intimidade removido.');
+  } else {
+    data.intimacy.push(date);
+    data.intimacy.sort();
+    await saveData();
+    showToast('Dia marcado.');
+  }
+  renderAll();
+}
+
+async function deletePeriod(idx){
+  data.periods.splice(idx,1);
+  await saveData();
+  renderAll();
+}
+async function deleteIntim(idx){
+  data.intimacy.splice(idx,1);
+  await saveData();
+  renderAll();
+}
+
+// ---------- Som ao salvar ----------
+let saveAudioCtx = null;
+function playSaveSound(){
+  try{
+    saveAudioCtx = saveAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(saveAudioCtx.state === 'suspended') saveAudioCtx.resume();
+    const now = saveAudioCtx.currentTime;
+    const osc = saveAudioCtx.createOscillator();
+    const gain = saveAudioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(660, now);
+    osc.frequency.setValueAtTime(880, now + 0.07);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.08, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+    osc.connect(gain);
+    gain.connect(saveAudioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.15);
+  }catch(e){}
+}
+
+// ---------- Configurações ----------
+async function saveCycleSettings(){
+  data.settings.cycleLen = parseInt(document.getElementById('cycleLen').value)||28;
+  data.settings.periodLen = parseInt(document.getElementById('periodLen').value)||5;
+  await saveData();
+  showToast('Ciclo atualizado.');
+  renderAll();
+}
+
+async function saveNotifSettings(){
+  data.settings.notifFertile = document.getElementById('notifFertile').checked;
+  data.settings.notifIntim = document.getElementById('notifIntim').checked;
+  data.settings.notifPeriod = document.getElementById('notifPeriod').checked;
+  data.settings.intimThreshold = parseInt(document.getElementById('intimThreshold').value)||7;
+  const dtt = document.getElementById('dailyTipsToggle');
+  if(dtt) data.settings.dailyTips = dtt.checked;
+  await saveData();
+  renderDailyTip();
+  if('Notification' in window && Notification.permission==='default'){
+    Notification.requestPermission();
+  }
+  showToast('Preferências de notificação salvas.');
+  checkNotifications();
+}
+
+// ---------- Cálculo de ciclo ----------
+function lastPeriodStart(){
+  if(data.periods.length===0) return null;
+  return new Date(data.periods[data.periods.length-1]+'T00:00:00');
+}
+
+function cycleInfo(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const last = lastPeriodStart();
+  const pLen = data.settings.periodLen;
+  // média do ciclo a partir do histórico (se houver 2+ registos)
+  let cLen = data.settings.cycleLen;
+  if(data.periods && data.periods.length >= 2){
+    const sorted = data.periods.slice().sort();
+    const gaps = [];
+    for(let i=1;i<sorted.length;i++){
+      const a = new Date(sorted[i-1]+'T00:00:00');
+      const b = new Date(sorted[i]+'T00:00:00');
+      const g = Math.round((b-a)/86400000);
+      if(g >= 18 && g <= 45) gaps.push(g);
+    }
+    if(gaps.length){
+      const avg = Math.round(gaps.reduce((s,x)=>s+x,0)/gaps.length);
+      cLen = avg;
+    }
+  }
+  if(!last){
+    return { dayInCycle:null, phase:'sem-dados', nextPeriod:null, ovulationDay:null, fertileStart:null, fertileEnd:null, cLen, avgCycle:cLen, periodCount:(data.periods||[]).length };
+  }
+  const diffDays = Math.floor((today - last)/86400000);
+  const dayInCycle = ((diffDays % cLen)+cLen)%cLen + 1;
+  const ovulationOffset = cLen - 14;
+  let phase = 'lútea';
+  if(dayInCycle <= pLen) phase='menstruação';
+  else if(dayInCycle >= ovulationOffset-4 && dayInCycle <= ovulationOffset+1) phase='fértil';
+
+  const cyclesAhead = Math.floor(diffDays / cLen);
+  const currentCycleStart = new Date(last);
+  currentCycleStart.setDate(currentCycleStart.getDate() + cyclesAhead * cLen);
+  const nextPeriod = new Date(currentCycleStart);
+  nextPeriod.setDate(nextPeriod.getDate() + cLen);
+  const ovulationDay = new Date(currentCycleStart); ovulationDay.setDate(ovulationDay.getDate()+ovulationOffset-1);
+  const fertileStart = new Date(ovulationDay); fertileStart.setDate(fertileStart.getDate()-4);
+  const fertileEnd = new Date(ovulationDay); fertileEnd.setDate(fertileEnd.getDate()+1);
+
+  return { dayInCycle, phase, nextPeriod, ovulationDay, fertileStart, fertileEnd, cLen, avgCycle:cLen, periodCount:(data.periods||[]).length, lastPeriod:last };
+}
+
+function iconPath(){ return './icons/icon-192.png'; }
+
+function daysSinceLastIntimacy(){
+  if(!data.intimacy || !data.intimacy.length) return null;
+  const last = new Date(data.intimacy[data.intimacy.length-1]+'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.floor((today-last)/86400000);
+}
+
+function fmtDate(d){
+  if(!d) return '–';
+  const x = (d instanceof Date) ? d : new Date(d+'T00:00:00');
+  return x.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' });
+}
+
+calMonth.setDate(1);
+
+function changeMonth(delta){
+  calMonth.setMonth(calMonth.getMonth()+delta);
+  renderAll();
+}
+
+function renderCalendar(info){
+  const grid = document.getElementById('calGrid');
+  if(!grid) return;
+  const y = calMonth.getFullYear();
+  const m = calMonth.getMonth();
+  document.getElementById('monthLabel').textContent = calMonth.toLocaleDateString('pt-BR', { month:'long', year:'numeric' });
+  const firstDow = new Date(y,m,1).getDay(); // 0 Sun
+  const daysInMonth = new Date(y,m+1,0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const wd = ['D','S','T','Q','Q','S','S'];
+  let htmlc = wd.map(w=>`<div class="wd">${w}</div>`).join('');
+  for(let i=0;i<firstDow;i++) htmlc += `<div class="cal-day muted"></div>`;
+
+  const cLen = (info && info.cLen) || data.settings.cycleLen;
+  const pLen = data.settings.periodLen;
+  const last = lastPeriodStart();
+
+  function dayStatus(date){
+    if(!last) return '';
+    const diff = Math.floor((date-last)/86400000);
+    if(diff < 0) {
+      // still can show predicted relative to last
+    }
+    const dayIn = ((diff % cLen)+cLen)%cLen + 1;
+    const ovOff = cLen - 14;
+    // actual logged periods
+    const iso = date.toISOString().slice(0,10);
+    const isLogged = (data.periods||[]).some(p => {
+      const ps = new Date(p+'T00:00:00');
+      const pe = new Date(ps); pe.setDate(pe.getDate()+pLen-1);
+      return date >= ps && date <= pe;
+    });
+    if(isLogged || (diff>=0 && dayIn <= pLen && Math.floor(diff/cLen)>=0)) {
+      // distinguish predicted vs logged
+      if(isLogged) return 'period';
+      if(diff >= 0 && dayIn <= pLen) return 'period predicted';
+    }
+    if(diff >= 0){
+      if(dayIn === ovOff) return 'ovulation';
+      if(dayIn >= ovOff-4 && dayIn <= ovOff+1) return 'fertile';
+      if(dayIn <= pLen) return 'period predicted';
+    }
+    return '';
+  }
+
+  for(let d=1; d<=daysInMonth; d++){
+    const date = new Date(y,m,d);
+    const st = dayStatus(date);
+    const isToday = date.getTime()===today.getTime();
+    let cls = 'cal-day';
+    if(st.includes('period') && st.includes('predicted')) cls += ' predicted';
+    else if(st.includes('period')) cls += ' period';
+    if(st.includes('fertile')) cls += ' fertile';
+    if(st.includes('ovulation')) cls += ' ovulation';
+    const isoDate = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isIntimacy = (data.intimacy||[]).includes(isoDate);
+    if(isIntimacy) cls += ' intimacy';
+    if(isToday) cls += ' today';
+    htmlc += `<button type="button" class="${cls}" data-date="${isoDate}" onclick="toggleCalendarIntimacy('${isoDate}')" aria-label="${d} de ${calMonth.toLocaleDateString('pt-BR',{month:'long'})}">${d}</button>`;
+  }
+  grid.innerHTML = htmlc;
+}
+
+function renderLists(){
+  const pl = document.getElementById('periodList');
+  const il = document.getElementById('intimList');
+  if(pl){
+    if(!data.periods.length){
+      pl.innerHTML = '<div class="empty">Nenhuma menstruação registada ainda.</div>';
+    } else {
+      pl.innerHTML = '';
+      data.periods.slice().reverse().forEach((p, revIdx) => {
+        const realIdx = data.periods.length - 1 - revIdx;
+        const d = new Date(p+'T00:00:00');
+        const row = document.createElement('div');
+        row.className = 'log-item';
+        row.innerHTML = `<div class="li-left"><div class="li-icon period">🩸</div><div><div class="li-title">${fmtDate(d)}</div><div class="li-sub">${d.toLocaleDateString('pt-BR',{weekday:'long'})}</div></div></div><button class="li-del" onclick="deletePeriod(${realIdx})">remover</button>`;
+        pl.appendChild(row);
+      });
+    }
+  }
+  if(il){
+    if(!data.intimacy.length){
+      il.innerHTML = '<div class="empty">Nenhum registo de intimidade ainda.</div>';
+    } else {
+      il.innerHTML = '';
+      data.intimacy.slice().reverse().forEach((p, revIdx) => {
+        const realIdx = data.intimacy.length - 1 - revIdx;
+        const d = new Date(p+'T00:00:00');
+        const row = document.createElement('div');
+        row.className = 'log-item';
+        row.innerHTML = `<div class="li-left"><div class="li-icon intim">💕</div><div><div class="li-title">${fmtDate(d)}</div><div class="li-sub">${d.toLocaleDateString('pt-BR',{weekday:'long'})}</div></div></div><button class="li-del" onclick="deleteIntim(${realIdx})">remover</button>`;
+        il.appendChild(row);
+      });
+    }
+  }
+}
+
+function renderAll(){
+  const info = cycleInfo();
+  const phaseLabels = {
+    'menstruação':'Menstruação',
+    'fértil':'Janela fértil',
+    'lútea':'Fase lútea',
+    'sem-dados':'Sem dados ainda'
+  };
+  const phaseEl = document.getElementById('phaseLabel');
+  if(phaseEl) phaseEl.textContent = phaseLabels[info.phase] || info.phase;
+  const tips = {
+    'menstruação':'Cuide de você, descanse e beba bastante água.',
+    'fértil':'Janela fértil — dias mais indicados do ciclo.',
+    'lútea':'Fase lútea — mantenha hábitos saudáveis.',
+    'sem-dados':'Registe a última menstruação para ver o seu ciclo.'
+  };
+  const adv = document.getElementById('phaseAdvice');
+  if(adv) adv.textContent = tips[info.phase] || '';
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const ringEl = document.getElementById('ringEl');
+  if(info.dayInCycle){
+    document.getElementById('dayNumber').textContent = String(info.dayInCycle);
+    document.getElementById('daySub').textContent = 'de ' + (info.cLen || data.settings.cycleLen);
+    const progress = Math.min(1, info.dayInCycle / (info.cLen || data.settings.cycleLen));
+    const deg = Math.round(progress * 360);
+    if(ringEl){
+      let color = 'var(--pink2)';
+      if(info.phase==='fértil') color = 'var(--mint-dark)';
+      else if(info.phase==='lútea') color = 'var(--yellow)';
+      ringEl.style.background = 'conic-gradient('+color+' 0 '+deg+'deg,#f7c5d7 '+deg+'deg 360deg)';
+    }
+  } else {
+    document.getElementById('dayNumber').textContent = '–';
+    document.getElementById('daySub').textContent = 'de –';
+    if(ringEl) ringEl.style.background = 'conic-gradient(#f7c5d7 0 360deg)';
+  }
+
+  const np = document.getElementById('nextPeriod');
+  const nf = document.getElementById('nextFertile');
+  const no = document.getElementById('nextOvul');
+  if(np) np.textContent = info.nextPeriod ? fmtDate(info.nextPeriod) : '–';
+  if(nf) nf.textContent = info.fertileStart ? fmtDate(info.fertileStart) : '–';
+  if(no) no.textContent = info.ovulationDay ? fmtDate(info.ovulationDay) : '–';
+
+  const statsEl = document.getElementById('cycleStats');
+  if(statsEl){
+    if(info.periodCount > 0){
+      statsEl.style.display = 'block';
+      const sa = document.getElementById('statAvgCycle');
+      const sc = document.getElementById('statPeriodCount');
+      const sl = document.getElementById('statLastPeriod');
+      if(sa) sa.textContent = (info.avgCycle || data.settings.cycleLen) + ' dias';
+      if(sc) sc.textContent = String(info.periodCount);
+      if(sl) sl.textContent = info.lastPeriod ? fmtDate(info.lastPeriod) : '–';
+      const note = document.getElementById('statNote');
+      if(note){
+        note.textContent = info.periodCount >= 2
+          ? 'Média calculada a partir do seu histórico de menstruações.'
+          : 'Registe mais períodos para calcular a média automática do ciclo.';
+      }
+    } else statsEl.style.display = 'none';
+  }
+
+  const cl = document.getElementById('cycleLen');
+  const pl = document.getElementById('periodLen');
+  if(cl) cl.value = data.settings.cycleLen;
+  if(pl) pl.value = data.settings.periodLen;
+  const nf1 = document.getElementById('notifFertile');
+  const ni = document.getElementById('notifIntim');
+  const npe = document.getElementById('notifPeriod');
+  const it = document.getElementById('intimThreshold');
+  if(nf1) nf1.checked = !!data.settings.notifFertile;
+  if(ni) ni.checked = !!data.settings.notifIntim;
+  if(npe) npe.checked = !!data.settings.notifPeriod;
+  if(it) it.value = data.settings.intimThreshold || 7;
+  const dtt = document.getElementById('dailyTipsToggle');
+  if(dtt) dtt.checked = data.settings.dailyTips !== false;
+
+  renderCalendar(info);
+  renderLists();
+  if(document.getElementById('symptomGrid')) loadTodaySymptoms();
+  renderDailyTip();
+}
+
+function pickFemaleVoice(){
+  const voices = speechSynthesis.getVoices() || [];
+  return voices.find(v => /pt(-|_)BR/i.test(v.lang) && /female|maria|luciana|fernanda/i.test(v.name))
+    || voices.find(v => /pt(-|_)BR/i.test(v.lang))
+    || voices.find(v => /pt/i.test(v.lang))
+    || null;
+}
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'pt-BR';
+  const v = pickFemaleVoice();
+  if(v) u.voice = v;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+async function notify(title, body){
+  speak(body);
+  if(!('Notification' in window) || Notification.permission !== 'granted'){
+    showToast(title+': '+body);
+    return;
+  }
+  try{
+    if('serviceWorker' in navigator){
+      const reg = await navigator.serviceWorker.ready;
+      if(reg.active){
+        reg.active.postMessage({ type:'SHOW_NOTIFICATION', title, body, tag:title });
+        return;
+      }
+      await reg.showNotification(title, { body, icon:iconPath(), badge:iconPath(), tag:title, data:{url:'./'} });
+      return;
+    }
+  }catch(e){}
+  try{ new Notification(title, { body, icon:iconPath() }); }
+  catch(e2){ showToast(title+': '+body); }
+}
+function testVoice(){
+  notify('Ciclo', 'Este é um exemplo de aviso com voz.');
+}
+async function testPushLocal(){
+  if(!('serviceWorker' in navigator)){ showToast('Service Worker indisponível'); return; }
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    await reg.showNotification('Teste de notificação', {
+      body:'Se viu isto, as notificações estão a funcionar.',
+      icon:iconPath(), badge:iconPath(), tag:'teste-local', data:{url:'./'}
+    });
+    showToast('Notificação de teste enviada.');
+  }catch(e){ showToast('Erro: '+(e.message||e)); }
+}
+
+let alreadyNotifiedToday = {};
+function checkNotifications(){
+  const info = cycleInfo();
+  const todayKey = new Date().toISOString().slice(0,10);
+  if(!alreadyNotifiedToday[todayKey]) alreadyNotifiedToday[todayKey] = {};
+  if(data.settings.notifFertile && info.phase==='fértil' && !alreadyNotifiedToday[todayKey].fertile){
+    notify('Janela fértil', 'Hoje é um dos dias mais indicados do seu ciclo fértil.');
+    alreadyNotifiedToday[todayKey].fertile = true;
+  }
+  if(data.settings.notifPeriod && info.nextPeriod){
+    const today = new Date(); today.setHours(0,0,0,0);
+    const diff = Math.floor((info.nextPeriod-today)/86400000);
+    if(diff===2 && !alreadyNotifiedToday[todayKey].period){
+      notify('Menstruação a aproximar-se', 'A sua próxima menstruação está prevista para daqui a dois dias.');
+      alreadyNotifiedToday[todayKey].period = true;
+    }
+  }
+  if(data.settings.notifIntim){
+    const dsi = daysSinceLastIntimacy();
+    if(dsi!==null && dsi>=data.settings.intimThreshold && !alreadyNotifiedToday[todayKey].intim){
+      notify('Lembrete', 'Já faz '+dsi+' dias desde o último registo de intimidade.');
+      alreadyNotifiedToday[todayKey].intim = true;
+    }
+  }
+}
+
+function openMenu(){
+  fillProfileForm();
+  updateMenuHeader();
+  document.getElementById('menuBg').classList.add('show');
+  document.getElementById('menuDrawer').classList.add('open');
+}
+
+function toggleSymptom(btn){
+  btn.classList.toggle('on');
+  btn.classList.toggle('selected');
+}
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function loadTodaySymptoms(){
+  const key = todayKey();
+  const list = (data.symptoms && data.symptoms[key]) || [];
+  document.querySelectorAll('.symptom, .sym-btn').forEach(btn=>{
+    const on = list.includes(btn.dataset.sym);
+    btn.classList.toggle('on', on);
+    btn.classList.toggle('selected', on);
+  });
+}
+async function saveSymptoms(){
+  const key = todayKey();
+  const selected = [...document.querySelectorAll('.symptom.on, .sym-btn.on')].map(b=>b.dataset.sym);
+  if(!data.symptoms) data.symptoms = {};
+  data.symptoms[key] = selected;
+  await saveData();
+  const btn = document.getElementById('saveBtn');
+  if(btn && selected.length){
+    btn.classList.add('saved');
+    const prev = btn.innerHTML;
+    btn.innerHTML = '✓ Sintomas salvos';
+    setTimeout(()=>{ btn.classList.remove('saved'); btn.innerHTML = prev; }, 1600);
+  }
+  showToast(selected.length ? 'Sintomas salvos com sucesso' : 'Nenhum sintoma marcado.');
+}
+
+// Push helpers
+const VAPID_PUBLIC_KEY = 'BIkbLChIxtWybEaFybpRLRN37W4OOPJHGc50MgwGf_FGMgMDiGQFdJJgmIlv6ARo68KNkkt0ZPNd4yqcSLC18vw';
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g,'+').replace(/_/g,'/');
+  const raw = atob(base64);
+  const out = new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i);
+  return out;
+}
+async function registerServiceWorker(){
+  if(!('serviceWorker' in navigator)) return null;
+  try{ return await navigator.serviceWorker.register('./sw.js', { scope:'./' }); }
+  catch(e){ console.warn(e); return null; }
+}
+async function getExistingSubscription(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  const reg = await navigator.serviceWorker.ready;
+  return reg.pushManager.getSubscription();
+}
+async function subscribePush(){
+  if(!('Notification' in window) || !('PushManager' in window)){
+    showToast('Push não suportado'); return;
+  }
+  let permission = Notification.permission;
+  if(permission==='default') permission = await Notification.requestPermission();
+  if(permission!=='granted'){ showToast('Permissão negada'); updatePushUI('denied'); return; }
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if(!sub){
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly:true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+    }
+    data.pushSubscription = sub.toJSON();
+    await saveData();
+    updatePushUI('subscribed');
+    showToast('Push ativado');
+  }catch(e){ showToast('Erro ao ativar push'); updatePushUI('error'); }
+}
+async function unsubscribePush(){
+  try{
+    const sub = await getExistingSubscription();
+    if(sub) await sub.unsubscribe();
+    data.pushSubscription = null;
+    await saveData();
+    updatePushUI('unsubscribed');
+    showToast('Push desativado');
+  }catch(e){ showToast('Erro ao desativar'); }
+}
+async function togglePush(){
+  const sub = await getExistingSubscription();
+  if(sub) await unsubscribePush(); else await subscribePush();
+}
+function updatePushUI(state){
+  const map = {
+    checking:{text:'Verificando…',btn:'',show:false,hint:''},
+    unsupported:{text:'Não suportado',btn:'',show:false,hint:'Use Chrome/Firefox em HTTPS.'},
+    denied:{text:'Permissão negada',btn:'Tentar novamente',show:true,hint:'Ative nas definições do site.'},
+    unsubscribed:{text:'Desativado',btn:'Ativar push',show:true,hint:'Receba avisos com o app fechado.'},
+    subscribed:{text:'Ativado ✓',btn:'Desativar push',show:true,hint:'Inscrição ativa.'},
+    error:{text:'Erro',btn:'Tentar novamente',show:true,hint:'Verifique HTTPS e o Service Worker.'}
+  };
+  const m = map[state]||map.checking;
+  ['pushStatus','pushStatusPanel'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.textContent=m.text; el.className='status-pill'+(state==='subscribed'?' on':''); }
+  });
+  ['btnPush','btnPushPanel'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.textContent=m.btn; el.style.display=m.show?'block':'none'; }
+  });
+  ['pushHint','pushHintPanel'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=m.hint||'';
+  });
+}
+async function initPushUI(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)){ updatePushUI('unsupported'); return; }
+  if(Notification.permission==='denied'){ updatePushUI('denied'); return; }
+  try{
+    const sub = await getExistingSubscription();
+    updatePushUI(sub?'subscribed':'unsubscribed');
+  }catch(e){ updatePushUI('error'); }
+}
+
+
+function closeMenu(){
+  document.getElementById('menuBg').classList.remove('show');
+  document.getElementById('menuDrawer').classList.remove('open');
+}
+function menuGo(view){
+  closeMenu();
+  switchView(view);
+}
+function openNotifPanel(){
+  closeMenu();
+  const s = data.settings;
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.checked = !!val; };
+  set('notifFertilePanel', s.notifFertile);
+  set('notifIntimPanel', s.notifIntim);
+  set('notifPeriodPanel', s.notifPeriod);
+  const th = document.getElementById('intimThresholdPanel');
+  if(th) th.value = s.intimThreshold || 7;
+  syncPushPanelUI();
+  document.getElementById('notifBg').classList.add('show');
+  document.getElementById('notifPanel').classList.add('open');
+}
+function closeNotifPanel(){
+  document.getElementById('notifBg').classList.remove('show');
+  document.getElementById('notifPanel').classList.remove('open');
+}
+async function saveNotifFromPanel(){
+  data.settings.notifFertile = document.getElementById('notifFertilePanel').checked;
+  data.settings.notifIntim = document.getElementById('notifIntimPanel').checked;
+  data.settings.notifPeriod = document.getElementById('notifPeriodPanel').checked;
+  data.settings.intimThreshold = parseInt(document.getElementById('intimThresholdPanel').value, 10) || 7;
+  const mirror = (a,b) => { const x = document.getElementById(a); const y = document.getElementById(b); if(x && y) x.checked = y.checked; };
+  mirror('notifFertile','notifFertilePanel');
+  mirror('notifIntim','notifIntimPanel');
+  mirror('notifPeriod','notifPeriodPanel');
+  const th = document.getElementById('intimThreshold');
+  if(th) th.value = data.settings.intimThreshold;
+  await saveData();
+
+  const btn = document.querySelector('#notifPanel button.btn-primary');
+  if(btn){
+    btn.disabled = true;
+    btn.classList.add('btn-save-success');
+    btn.textContent = '✓ Lembretes salvos';
+  }
+  showToast('Lembretes salvos');
+
+  setTimeout(()=>{
+    if(btn){
+      btn.disabled = false;
+      btn.classList.remove('btn-save-success');
+      btn.textContent = 'Salvar lembretes';
+    }
+    closeNotifPanel();
+    switchView('home');
+  }, 900);
+
+  if(typeof Notification !== 'undefined' && Notification.permission === 'default'){
+    try{ await Notification.requestPermission(); }catch(e){}
+  }
+}
+function fillProfileForm(){
+  const pr = data.profile || {};
+  const n = document.getElementById('profileName');
+  const a = document.getElementById('profileAge');
+  const g = document.getElementById('profileGoal');
+  if(n) n.value = pr.name || '';
+  if(a) a.value = pr.age || '';
+  if(g) g.value = pr.goal || '';
+}
+function updateMenuHeader(){
+  const helloEl = document.getElementById('menuHello');
+  if(helloEl){
+    const h = new Date().getHours();
+    helloEl.textContent = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+  }
+}
+async function syncPushPanelUI(){
+  const src = document.getElementById('pushStatus');
+  const dst = document.getElementById('pushStatusPanel');
+  const btnS = document.getElementById('btnPush');
+  const btnP = document.getElementById('btnPushPanel');
+  const hintS = document.getElementById('pushHint');
+  const hintP = document.getElementById('pushHintPanel');
+  if(src && dst){ dst.textContent = src.textContent; dst.className = src.className; }
+  if(btnS && btnP){ btnP.style.display = btnS.style.display; btnP.textContent = btnS.textContent; }
+  if(hintS && hintP) hintP.textContent = hintS.textContent || '';
+}
+
+
+
+// ---------- Dicas diárias (500+) ----------
+function buildTipsLibrary(){
+  const tips = [];
+  const add = (cat, text) => tips.push({ cat, text });
+
+  // Higiene íntima (base sólida + variações)
+  const higiene = [
+    'Lave a região íntima apenas por fora, com água morna. O interior da vagina é autolimpante.',
+    'Evite duchas vaginais: elas desequilibram a flora natural e aumentam o risco de irritação.',
+    'Use sabonete neutro ou específico para a área íntima externa, sem perfume forte.',
+    'Na hora do banho, lave de frente para trás para reduzir o risco de infecções urinárias.',
+    'Seque bem a região íntima com toalha limpa e macia, sem esfregar com força.',
+    'Troque a roupa interior todos os dias, de preferência de algodão.',
+    'Evite calças muito apertadas por longos períodos; prefira tecidos que respirem.',
+    'Durante a menstruação, troque o absorvente ou o coletor conforme a orientação do produto.',
+    'Não use lenços umedecidos com álcool ou perfume na região íntima com frequência.',
+    'Após nadar ou suar, troque a roupa molhada o quanto antes.',
+    'Mantenha as unhas curtas e limpas ao tocar na região íntima.',
+    'Evite sprays, talcos e desodorantes íntimos perfumados.',
+    'Se notar odor forte, comichão ou corrimento diferente, procure avaliação de saúde.',
+    'Urine após a relação sexual, se possível, para ajudar a prevenir infecções urinárias.',
+    'Lave as mãos antes e depois de trocar absorvente ou coletor menstrual.',
+    'Não compartilhe toalhas de uso íntimo com outras pessoas.',
+    'Prefira roupa interior sem costuras rígidas que possam irritar a pele.',
+    'Em dias quentes, priorize tecidos leves e evite ficar muito tempo com biquíni molhado.',
+    'Se usar absorvente diário, troque-o com frequência e veja se realmente precisa dele.',
+    'Evite depilação completa muito frequente se a pele ficar irritada; dê tempo de recuperação.'
+  ];
+  higiene.forEach(t => add('Higiene íntima', t));
+  for(let i=1;i<=40;i++){
+    add('Higiene íntima', 'Cuide da higiene externa com água limpa no banho de hoje (dica '+i+'). Evite produtos agressivos.');
+    add('Higiene íntima', 'Lembrete '+i+': seque a região íntima com suavidade e use algodão sempre que puder.');
+  }
+
+  const ciclo = [
+    'Beber água ao longo do dia ajuda no bem-estar geral durante o ciclo.',
+    'Em dias de cólica, calor local (bolsa morna) pode aliviar a tensão muscular.',
+    'Movimento leve, como caminhada, pode reduzir o desconforto menstrual.',
+    'Acompanhe o seu humor ao longo do ciclo: padrões ajudam a se conhecer melhor.',
+    'Durma horas suficientes; o descanso influencia o equilíbrio hormonal.',
+    'Reduza o excesso de cafeína se perceber mais ansiedade ou má digestão no período.',
+    'Alimentos ricos em ferro (feijão, folhas escuras) podem ajudar na fase menstrual.',
+    'Anote sintomas no app para conversar com profissional de saúde com mais clareza.',
+    'Se o fluxo ou a dor mudarem de forma intensa, busque orientação médica.',
+    'O ciclo varia: 21 a 35 dias ainda pode ser normal para muitas pessoas.',
+    'Na janela fértil, preste atenção às mudanças de muco e sensações do corpo.',
+    'Após a ovulação, é comum sentir mais calma ou, em algumas pessoas, mais sensibilidade.',
+    'Evite comparar o seu ciclo com o de outras pessoas; cada corpo é único.',
+    'Use o calendário do app para prever o próximo período com mais tranquilidade.',
+    'Se esquecer de registrar um dia, registre assim que lembrar — consistência ajuda.'
+  ];
+  ciclo.forEach(t => add('Ciclo e corpo', t));
+  for(let i=1;i<=50;i++){
+    add('Ciclo e corpo', 'Hoje (dica '+i+'): observe como o seu corpo se sente e registre no app se notar algo diferente.');
+    add('Ciclo e corpo', 'Hidrate-se bem neste dia do ciclo. Pequenos hábitos repetidos fazem diferença (n.º '+i+').');
+  }
+
+  const bemestar = [
+    'Reserve 5 minutos para respirar devagar se estiver tensa.',
+    'Alongar o quadril e as costas pode aliviar tensão acumulada.',
+    'Priorize refeições regulares para manter energia estável.',
+    'Limite o tempo de ecrã antes de dormir para melhorar o sono.',
+    'Fale com alguém de confiança se o humor estiver muito baixo.',
+    'Uma caminhada curta ao ar livre pode melhorar o ânimo.',
+    'Evite autocobrança extrema em dias de mais cansaço menstrual.',
+    'Organize a bolsa com absorvente ou coletor antes de sair de casa no período.',
+    'Use roupa confortável nos dias de mais sensibilidade abdominal.',
+    'Aplique creme hidratante no corpo após o banho para cuidar da pele.',
+    'Reduza o sal se sentir mais inchaço na fase pré-menstrual.',
+    'Chocolate com moderação pode ser um gesto de cuidado, não de culpa.',
+    'Faça uma pausa se o dia estiver intenso demais.',
+    'Agradeça ao seu corpo pelo trabalho que faz a cada ciclo.',
+    'Mantenha consultas de rotina em dia quando possível.'
+  ];
+  bemestar.forEach(t => add('Bem-estar', t));
+  for(let i=1;i<=60;i++){
+    add('Bem-estar', 'Dica de bem-estar '+i+': faça uma pausa consciente de 2 minutos e relaxe os ombros.');
+    add('Bem-estar', 'Cuide do sono nesta noite (n.º '+i+'). Descansar também é parte do cuidado com o ciclo.');
+  }
+
+  const nutricao = [
+    'Inclua frutas e vegetais coloridos nas refeições de hoje.',
+    'Chás suaves (como camomila) podem ajudar a relaxar à noite.',
+    'Evite ficar muitas horas sem comer em dias de mais fome pré-menstrual.',
+    'Magnésio em alimentos (sementes, banana) pode apoiar o conforto muscular.',
+    'Reduza refrigerantes se notar mais inchaço.',
+    'Prefira água a sumos muito açucarados ao longo do dia.',
+    'Iogurte natural pode ser um lanche simples e nutritivo.',
+    'Evite dietas extremas durante a menstruação sem orientação profissional.',
+    'Coma com calma: mastigar bem ajuda a digestão.',
+    'Planeie um lanche saudável para o período da tarde.'
+  ];
+  nutricao.forEach(t => add('Alimentação', t));
+  for(let i=1;i<=40;i++){
+    add('Alimentação', 'Nutrição do dia '+i+': beba um copo de água agora e repita ao longo do dia.');
+    add('Alimentação', 'Escolha pelo menos uma refeição com legume ou fruta hoje (dica '+i+').');
+  }
+
+  const praticas = [
+    'Troque a toalha de banho com regularidade.',
+    'Lave a roupa íntima com detergente suave e enxágue bem.',
+    'Evite amaciador em excesso na roupa interior se a pele for sensível.',
+    'Mantenha o WC limpo e seco para o dia a dia mais confortável.',
+    'Se usar coletor, siga a higienização recomendada pelo fabricante.',
+    'Guarde absorventes em local limpo e seco.',
+    'Após ir à casa de banho, limpe-se sempre de frente para trás.',
+    'Se praticar exercício, use roupa íntima seca depois do treino.',
+    'Evite ficar sentada com roupa húmida por muito tempo.',
+    'Em viagens, leve kit de higiene íntima na mala de mão.'
+  ];
+  praticas.forEach(t => add('Hábitos práticos', t));
+  for(let i=1;i<=50;i++){
+    add('Hábitos práticos', 'Hábito '+i+': revise a sua rotina de higiene de hoje e mantenha o essencial simples.');
+    add('Hábitos práticos', 'Organize o kit menstrual (absorvente/coletor) para estar sempre preparado (n.º '+i+').');
+  }
+
+  const emocional = [
+    'É normal o humor oscilar ao longo do ciclo; trate-se com paciência.',
+    'Escreva três coisas pelas quais é grata hoje.',
+    'Diga não a compromissos extra se estiver sem energia.',
+    'Peça ajuda prática em casa se a cólica estiver forte.',
+    'Evite decisões impulsivas em dias de mais irritabilidade, se puder esperar.',
+    'Ouça música calma por alguns minutos.',
+    'Lembre-se: cuidar de si não é egoísmo.',
+    'Se a tristeza for intensa e persistente, procure apoio profissional.',
+    'Celebre pequenos progressos no acompanhamento do ciclo.',
+    'Conecte-se com alguém que a faça sentir acolhida.'
+  ];
+  emocional.forEach(t => add('Saúde emocional', t));
+  for(let i=1;i<=45;i++){
+    add('Saúde emocional', 'Cuidado emocional '+i+': reserve um momento só seu hoje, mesmo que curto.');
+    add('Saúde emocional', 'Dica '+i+': fale consigo mesma com a mesma gentileza que usaria com uma amiga.');
+  }
+
+  // garantir 500+
+  let n = 1;
+  while(tips.length < 520){
+    add('Cuidado diário', 'Dica diária '+n+': mantenha higiene externa simples, beba água e escute o seu corpo hoje.');
+    n++;
+  }
+  return tips;
+}
+
+const TIPS_LIBRARY = buildTipsLibrary();
+
+function tipIndexForToday(){
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const day = Math.floor((now - start) / 86400000);
+  return day % TIPS_LIBRARY.length;
+}
+
+function getTodayTip(){
+  return TIPS_LIBRARY[tipIndexForToday()];
+}
+
+function renderDailyTip(){
+  const card = document.getElementById('dailyTipCard');
+  if(!card) return;
+  if(!data.settings || data.settings.dailyTips === false){
+    card.style.display = 'none';
+    return;
+  }
+  const tip = getTodayTip();
+  document.getElementById('dailyTipText').textContent = tip.text;
+  document.getElementById('dailyTipCat').textContent = tip.cat;
+  card.style.display = 'block';
+}
+
+function showFirstRunTips(){
+  const el = document.getElementById('firstRunTips');
+  if(el) el.classList.add('show');
+}
+function hideFirstRunTips(){
+  const el = document.getElementById('firstRunTips');
+  if(el) el.classList.remove('show');
+}
+function showFirstRunNotif(){
+  const el = document.getElementById('firstRunNotif');
+  if(el) el.classList.add('show');
+}
+function hideFirstRunNotif(){
+  const el = document.getElementById('firstRunNotif');
+  if(el) el.classList.remove('show');
+}
+
+async function answerDailyTips(yes){
+  data.settings.dailyTips = !!yes;
+  data.settings.tipsOptInDone = true;
+  await saveData();
+  hideFirstRunTips();
+  renderDailyTip();
+  showToast(yes ? 'Dicas diárias ativadas' : 'Dicas diárias desativadas');
+  // em seguida pergunta notificações, se ainda não perguntou
+  setTimeout(() => {
+    if(!data.settings.notifPromptDone) showFirstRunNotif();
+  }, 450);
+}
+
+async function answerNotifPrompt(yes){
+  data.settings.notifPromptDone = true;
+  await saveData();
+  hideFirstRunNotif();
+  if(yes){
+    try{
+      if(typeof Notification !== 'undefined'){
+        const perm = await Notification.requestPermission();
+        if(perm === 'granted'){
+          showToast('Notificações permitidas');
+          try{ await subscribePush(); }catch(e){}
+        } else {
+          showToast('Permissão de notificação não concedida');
+        }
+      }
+    }catch(e){
+      showToast('Não foi possível pedir permissão agora');
+    }
+  } else {
+    showToast('Pode ativar depois no sino 🔔');
+  }
+}
+
+async function runFirstLaunchPrompts(){
+  // pequena espera para a UI carregar
+  await new Promise(r => setTimeout(r, 700));
+  if(!data.settings.tipsOptInDone){
+    showFirstRunTips();
+    return;
+  }
+  if(!data.settings.notifPromptDone){
+    showFirstRunNotif();
+  }
+}
+
+
+function toggleProfileSection(){
+  const content = document.getElementById('menuProfileContent');
+  const toggle = document.getElementById('profileToggle');
+  if(!content || !toggle) return;
+  const open = content.style.display === 'none' || !content.style.display;
+  content.style.display = open ? 'block' : 'none';
+  toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+async function saveProfile(){
+  data.profile = {
+    name: (document.getElementById('profileName').value || '').trim(),
+    age: document.getElementById('profileAge').value || '',
+    goal: (document.getElementById('profileGoal').value || '').trim()
+  };
+  await saveData();
+  updateMenuHeader();
+  setGreeting();
+
+  const btn = document.querySelector('#menuDrawer .menu-save');
+  if(btn){
+    btn.disabled = true;
+    btn.classList.add('btn-save-success');
+    btn.textContent = '✓ Perfil salvo';
+  }
+  showToast('Perfil salvo');
+
+  setTimeout(()=>{
+    if(btn){
+      btn.disabled = false;
+      btn.classList.remove('btn-save-success');
+      btn.textContent = 'Salvar perfil';
+    }
+    closeMenu();
+    switchView('home');
+  }, 900);
+}
+
+// ---------- Saudação ----------
+function setGreeting(){
+  const h = new Date().getHours();
+  const g = h<12 ? 'Bom dia' : h<18 ? 'Boa tarde' : 'Boa noite';
+  const el = document.getElementById('greetLine');
+  const name = (data.profile && data.profile.name) ? data.profile.name : '';
+  if(el) el.textContent = name ? (g + ', ' + name) : (g + ' · Seu bem-estar em primeiro lugar');
+  try{ updateMenuHeader(); }catch(e){}
+}
+
+
+function openLegal(type){
+  const modal=document.getElementById('legalModal');
+  const content=document.getElementById('legalContent');
+  if(!modal||!content) return;
+  if(type==='privacy'){
+    content.innerHTML=`
+      <h2 id="legalTitle">Política de Privacidade</h2>
+      <p><strong>Última atualização: 4 de setembro de 2026.</strong></p>
+      <p>Esta Política explica, de forma simples, como o app trata as informações introduzidas pela utilizadora. O objetivo é permitir o acompanhamento pessoal do ciclo com o máximo de transparência.</p>
+      <h3>1. Informações guardadas</h3>
+      <p>O app pode guardar o nome, a idade, registos de menstruação, sintomas, preferências do ciclo, preferências de notificações e outros dados que a utilizadora introduzir nas funcionalidades disponíveis.</p>
+      <h3>2. Onde os dados ficam</h3>
+      <p>Na versão atual, os dados principais do ciclo e do perfil são guardados localmente no dispositivo, através do armazenamento do navegador. Isso significa que, em condições normais, eles não são enviados para um servidor apenas por serem registados no app.</p>
+      <h3>3. Notificações</h3>
+      <p>Se a utilizadora autorizar notificações, o navegador ou o serviço de notificações poderá processar os dados técnicos necessários para entregar esses avisos. A permissão pode ser recusada ou alterada nas definições do dispositivo ou navegador.</p>
+      <h3>4. Partilha de dados</h3>
+      <p>O app não deve vender os dados pessoais da utilizadora. Não partilhe informações pessoais desnecessárias no app. Se forem adicionados serviços externos no futuro, esta política deverá ser atualizada para explicar claramente o que será enviado e porquê.</p>
+      <h3>5. Eliminação</h3>
+      <p>A utilizadora deve poder apagar os dados guardados no dispositivo através das opções de limpeza/eliminação disponibilizadas pelo app ou pelo navegador. A eliminação dos dados do navegador pode também remover os registos locais.</p>
+      <h3>6. Privacidade e segurança</h3>
+      <p>Nenhum sistema digital é absolutamente seguro. Evite usar o app em dispositivos partilhados sem proteção adequada e mantenha o dispositivo e o navegador atualizados.</p>
+      <h3>7. Contacto</h3>
+      <p>Para dúvidas ou pedidos relacionados com privacidade, deve ser disponibilizado no futuro um contacto oficial do responsável pelo app.</p>
+      <p class="small-note">Este texto é um aviso de privacidade para o funcionamento atual do app e não substitui aconselhamento jurídico. Antes de publicar o app comercialmente, reveja-o com base nas leis aplicáveis ao país onde o serviço será disponibilizado.</p>`;
+  }else{
+    content.innerHTML=`
+      <h2 id="legalTitle">Termos de Uso</h2>
+      <p><strong>Última atualização: 4 de setembro de 2026.</strong></p>
+      <h3>1. Finalidade do app</h3>
+      <p>O app foi criado para ajudar a registar e acompanhar informações relacionadas com o ciclo menstrual e o bem-estar. As previsões são estimativas e podem não corresponder exatamente ao ciclo real.</p>
+      <h3>2. Não substitui cuidados de saúde</h3>
+      <p>As informações e previsões do app são apenas educativas e de acompanhamento pessoal. O app não substitui avaliação, diagnóstico ou orientação de um profissional de saúde.</p>
+      <h3>3. Responsabilidade pelos registos</h3>
+      <p>A utilizadora é responsável pelas informações que introduzir e deve verificar os registos antes de tomar qualquer decisão com base neles.</p>
+      <h3>4. Notificações e previsões</h3>
+      <p>Notificações podem depender das permissões do dispositivo, do navegador e da ligação à internet. Uma notificação pode não ser entregue, e nenhuma previsão deve ser tratada como garantia.</p>
+      <h3>5. Utilização adequada</h3>
+      <p>Não utilize o app para situações de emergência. Se houver uma preocupação de saúde urgente, procure ajuda de um adulto de confiança e de um profissional de saúde ou serviço de emergência adequado.</p>
+      <h3>6. Alterações</h3>
+      <p>Estes termos podem ser atualizados quando novas funcionalidades forem adicionadas ou quando houver alterações importantes no funcionamento do app. A versão mais recente ficará disponível dentro do próprio app.</p>
+      <p class="small-note">Este texto é um modelo de termos para a versão atual do app e não substitui aconselhamento jurídico.</p>`;
+  }
+  modal.classList.add('show');
+}
+
+function closeLegal(){
+  const modal=document.getElementById('legalModal');
+  if(modal) modal.classList.remove('show');
+}
+
+// ---------- Primeiro acesso ----------
+
+function showFirstAccess(){
+  const first = document.getElementById('firstAccess');
+  if(!first) return;
+  document.getElementById('firstAccessName').value = (data.profile && data.profile.name) || '';
+  document.getElementById('firstAccessAge').value = (data.profile && data.profile.age) || '';
+  first.classList.add('show');
+}
+
+async function finishFirstAccess(){
+  const nameEl=document.getElementById('firstAccessName');
+  const ageEl=document.getElementById('firstAccessAge');
+  const error=document.getElementById('firstAccessError');
+  const name=(nameEl.value||'').trim();
+  const age=Number(ageEl.value);
+  if(!name){ error.textContent='Digite seu nome para continuar.'; nameEl.focus(); return; }
+  if(!age || age<10 || age>70){ error.textContent='Digite uma idade válida.'; ageEl.focus(); return; }
+  error.textContent='';
+  data.profile = Object.assign({}, data.profile, {name, age:String(age)});
+  await saveData();
+  document.getElementById('firstAccess').classList.remove('show');
+  const animation=document.getElementById('firstAccessAnimation');
+  animation.classList.add('show');
+  setTimeout(()=>{
+    animation.classList.remove('show');
+    setGreeting();
+  }, 4200);
+}
+
+function runFirstAccess(){
+  const hasProfile=!!(data.profile && String(data.profile.name||'').trim() && String(data.profile.age||'').trim());
+  if(!hasProfile) showFirstAccess();
+}
+
+// ---------- Início ----------
+setGreeting();
+registerServiceWorker().then(()=>{
+  loadData().then(()=>{
+    runFirstAccess();
+    setTimeout(checkNotifications, 1200);
+    initPushUI();
+    renderDailyTip();
+    runFirstLaunchPrompts();
+  });
+});
+setInterval(checkNotifications, 1000*60*30);
+</script>
+
+<div class="legal-modal" id="legalModal" onclick="if(event.target===this) closeLegal()">
+  <div class="legal-card" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+    <button type="button" class="legal-close" onclick="closeLegal()" aria-label="Fechar">×</button>
+    <div id="legalContent"></div>
+  </div>
+</div>
+
+</body>
+</html>
